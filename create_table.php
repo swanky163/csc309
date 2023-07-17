@@ -1,62 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CSC 309 DB Class</title>
-</head>
-<body>
-    <h2>Registration Form</h2>
 
-    <!-- Select all users and display in a Table -->
-    <table cellpadding="10" cellspacing="1" border="1">
-        <thead>
-            <tr>
-                <td>SN</td>
-                <td>Last Name</td> 	
-                <td>First Name</td> 	
-                <td>Gender</td>
-                <td>Date of Birth</td> 	
-                <td>Email</td>
-            </tr>
-        </thead>
+<?php
+    $server = 'localhost'; // 127.0.0.1
+    $username = 'root';
+    $password = '';
+    $db = 'csc309';
 
-        <tbody>
-           <?php
-                //my server variables
-                $server = 'localhost'; // 127.0.0.1
-                $username = 'root';
-                $password = '';
-                $db = 'csc309';
+    // Open a new connection
+    $con = new mysqli($server, $username, $password, $db);
 
-                //my server connection
-                $conn = new mysqli($server, $username, $password, $db);
-            
-            //check server connection
-            if ($conn){
-                //my select query
-                $sql = "SELECT * FROM users";
-                
-                //query result
-                $result = $conn->query($sql);
-                
-                //fetch the data from the result set
-                while ($row = $result->fetch_assoc()) {?>
-                    <tr>
-                        <td><?php echo $row["id"];?></td>
-                        <td><?php echo $row["lastname"];?></td> 	
-                        <td><?php echo $row["firstname"];?></td> 	
-                        <td><?php echo $row["gender"];?></td>
-                        <td><?php echo $row["date_of_birth"];?></td> 	
-                        <td><?php echo $row["email"];?></td>
-                   </tr>
-                
-                 <?php }
-                
-                }
-                // Close connection
-                $conn->close();
-             ?>
-            
-        </tbody>
-    </table>
-  </body>
-</html>
+
+    // Check connection
+    if ($con->connect_error){
+        die("Connection failed: " . $con->connect_error);
+    }
+
+    // Create a Table
+    $sql = 'CREATE TABLE users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        firstname VARCHAR(30) NOT NULL,
+        lastname VARCHAR(30) NOT NULL,
+        email VARCHAR(50) NOT NULL UNIQUE,
+        gender CHAR(1) NOT NULL,
+        date_of_birth DATE NOT NULL
+    )';
+
+    $result = $con->query($sql);
+
+    if ($result === true) {
+        echo 'Table created successfully';
+    } else {
+        echo 'Error creating creating2: ' . $con->error;
+    }
+
+    // Close connection
+    $con->close();
+?>
